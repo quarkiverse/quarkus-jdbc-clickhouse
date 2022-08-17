@@ -1,0 +1,9 @@
+name: Jdbc Clickhouse
+#description: Do something useful.
+metadata:
+#  keywords:
+#    - jdbc-clickhouse
+#  guide: https://quarkiverse.github.io/quarkiverse-docs/jdbc-clickhouse/dev/
+#  categories:
+#    - "miscellaneous"
+#  status: "preview"
