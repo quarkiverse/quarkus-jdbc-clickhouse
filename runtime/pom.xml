@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.quarkiverse.quarkus-jdbc-clickhouse</groupId>
+    <groupId>io.quarkiverse.jdbc</groupId>
     <artifactId>quarkus-jdbc-clickhouse-parent</artifactId>
     <version>999-SNAPSHOT</version>
   </parent>
