@@ -16,17 +16,46 @@
 */
 package io.quarkiverse.quarkus.jdbc.clickhouse.it;
 
+import java.sql.*;
+
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+
+import io.agroal.api.AgroalDataSource;
 
 @Path("/jdbc-clickhouse")
 @ApplicationScoped
 public class JdbcClickhouseResource {
-    // add some rest methods here
+    @Inject
+    AgroalDataSource ds;
 
     @GET
-    public String hello() {
-        return "Hello jdbc-clickhouse";
+    @Path("agoral")
+    public String testAgoral() throws SQLException {
+        String result;
+        try (Connection connection = ds.getConnection()) {
+            result = test(connection);
+        }
+        return result;
+    }
+
+    private String test(Connection connection) throws SQLException {
+        StringBuilder result = new StringBuilder();
+        try (Statement statement = connection.createStatement()) {
+            statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+            statement.executeUpdate("drop table if exists xperson");
+            statement.executeUpdate("create table xperson (id integer, name string)");
+            statement.executeUpdate("insert into xperson values(1, 'leo')");
+            statement.executeUpdate("insert into xperson values(2, 'yui')");
+            try (ResultSet rs = statement.executeQuery("select * from xperson")) {
+                while (rs.next()) {
+                    result.append(rs.getInt("id")).append("/").append(rs.getString("name")).append("/");
+                }
+            }
+        }
+        return result.toString();
     }
 }

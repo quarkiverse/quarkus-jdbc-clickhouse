@@ -1,4 +1,4 @@
-package io.quarkiverse.quarkus.jdbc.clickhouse.test;
+package io.quarkiverse.jdbc.clickhouse.test;
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -13,7 +13,7 @@ public class JdbcClickhouseDevModeTest {
     // Start hot reload (DevMode) test with your extension loaded
     @RegisterExtension
     static final QuarkusDevModeTest devModeTest = new QuarkusDevModeTest()
-        .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
+            .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
 
     @Test
     public void writeYourOwnDevModeTest() {

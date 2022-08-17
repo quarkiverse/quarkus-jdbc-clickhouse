@@ -1,9 +1,11 @@
-name: Jdbc Clickhouse
-#description: Do something useful.
+artifact: ${project.groupId}:${project.artifactId}:${project.version}
+name: JDBC Driver - Clickhouse
 metadata:
-#  keywords:
-#    - jdbc-clickhouse
-#  guide: https://quarkiverse.github.io/quarkiverse-docs/jdbc-clickhouse/dev/
-#  categories:
-#    - "miscellaneous"
-#  status: "preview"
+  keywords:
+    - "jdbc-clickhouse"
+    - "jdbc"
+    - "clickhouse"
+  categories:
+    - "data"
+  status: "preview"
+  description: "Connect to the Sqlite database via JDBC/DataSource/Hibernate"

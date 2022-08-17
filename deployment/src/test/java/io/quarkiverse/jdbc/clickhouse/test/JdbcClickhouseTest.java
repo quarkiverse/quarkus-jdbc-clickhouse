@@ -1,4 +1,4 @@
-package io.quarkiverse.quarkus.jdbc.clickhouse.test;
+package io.quarkiverse.jdbc.clickhouse.test;
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -8,12 +8,15 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import io.quarkus.test.QuarkusUnitTest;
 
+import javax.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 public class JdbcClickhouseTest {
 
     // Start unit test with your extension loaded
     @RegisterExtension
     static final QuarkusUnitTest unitTest = new QuarkusUnitTest()
-        .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
+            .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
 
     @Test
     public void writeYourOwnUnitTest() {
