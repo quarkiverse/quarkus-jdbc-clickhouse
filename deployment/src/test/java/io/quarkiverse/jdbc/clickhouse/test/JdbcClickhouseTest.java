@@ -1,5 +1,7 @@
 package io.quarkiverse.jdbc.clickhouse.test;
 
+import javax.enterprise.context.ApplicationScoped;
+
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.jupiter.api.Assertions;
@@ -7,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import io.quarkus.test.QuarkusUnitTest;
-
-import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class JdbcClickhouseTest {
