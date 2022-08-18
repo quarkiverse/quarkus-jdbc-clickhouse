@@ -23,7 +23,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.version>2.12.0.CR1</quarkus.version>
-    <clickhouse.driver.version>0.3.2-patch11</clickhouse.driver.version>
+    <clickhouse.driver.version>0.3.2-test3</clickhouse.driver.version>
     <testcontainers.clickhouse.version>1.17.3</testcontainers.clickhouse.version>
   </properties>
   <dependencyManagement>
