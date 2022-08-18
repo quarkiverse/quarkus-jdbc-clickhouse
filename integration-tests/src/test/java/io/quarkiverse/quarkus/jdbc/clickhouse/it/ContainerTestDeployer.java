@@ -23,7 +23,7 @@ public class ContainerTestDeployer implements QuarkusTestResourceLifecycleManage
 
     @Override
     public Map<String, String> start() {
-        container = new ClickHouseContainer(ClickHouseContainer.IMAGE)
+        container = new QuarkusClickHouseContainer(ClickHouseContainer.IMAGE)
                 .withLogConsumer(outputFrame -> {
                 });
 
@@ -59,5 +59,23 @@ public class ContainerTestDeployer implements QuarkusTestResourceLifecycleManage
     @Override
     public void stop() {
         // close container
+    }
+
+    private static class QuarkusClickHouseContainer extends ClickHouseContainer {
+
+        public QuarkusClickHouseContainer(String dockerImageName) {
+            super(dockerImageName);
+        }
+
+        @Override
+        public String getDriverClassName() {
+            String className = "com.clickhouse.jdbc.ClickHouseDriver";
+            try {
+                Class.forName(className);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            return className;
+        }
     }
 }

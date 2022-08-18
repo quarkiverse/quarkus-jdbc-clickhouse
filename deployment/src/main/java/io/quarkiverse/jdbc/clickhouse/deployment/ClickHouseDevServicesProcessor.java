@@ -1,5 +1,6 @@
 package io.quarkiverse.jdbc.clickhouse.deployment;
 
+import static io.quarkiverse.jdbc.clickhouse.deployment.JdbcClickhouseProcessor.DRIVER_NAME;
 import static io.quarkus.datasource.deployment.spi.DatabaseDefaultSetupConfig.DEFAULT_DATABASE_NAME;
 import static io.quarkus.datasource.deployment.spi.DatabaseDefaultSetupConfig.DEFAULT_DATABASE_PASSWORD;
 import static io.quarkus.datasource.deployment.spi.DatabaseDefaultSetupConfig.DEFAULT_DATABASE_USERNAME;
@@ -94,6 +95,11 @@ public class ClickHouseDevServicesProcessor {
             } else {
                 addExposedPort(ClickHouseContainer.HTTP_PORT);
             }
+        }
+
+        @Override
+        public String getDriverClassName() {
+            return DRIVER_NAME;
         }
 
         // this is meant to be called by Quarkus code and is not strictly needed

@@ -47,7 +47,7 @@ public class JdbcClickhouseResource {
             statement.setQueryTimeout(30); // set timeout to 30 sec.
 
             statement.executeUpdate("drop table if exists xperson");
-            statement.executeUpdate("create table xperson (id integer, name string)");
+            statement.executeUpdate("create table xperson (id Int64, name String) ENGINE = Memory");
             statement.executeUpdate("insert into xperson values(1, 'leo')");
             statement.executeUpdate("insert into xperson values(2, 'yui')");
             try (ResultSet rs = statement.executeQuery("select * from xperson")) {
