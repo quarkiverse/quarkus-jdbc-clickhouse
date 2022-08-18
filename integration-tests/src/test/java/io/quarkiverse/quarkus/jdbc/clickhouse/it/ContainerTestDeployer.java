@@ -1,4 +1,6 @@
-package io.quarkiverse.jdbc.clickhouse.test;
+package io.quarkiverse.quarkus.jdbc.clickhouse.it;
+
+import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 import java.util.Map;
 import java.util.Optional;
@@ -24,8 +26,10 @@ public class ContainerTestDeployer implements QuarkusTestResourceLifecycleManage
         container = new ClickHouseContainer(ClickHouseContainer.IMAGE)
                 .withLogConsumer(outputFrame -> {
                 });
+
         containerNetworkId.ifPresent(container::withNetworkMode);
         container.start();
+        await().until(container::isRunning);
         String jdbcUrl = container.getJdbcUrl();
         if (containerNetworkId.isPresent()) {
             // Replace hostname + port in the provided JDBC URL with the hostname of the Docker container
