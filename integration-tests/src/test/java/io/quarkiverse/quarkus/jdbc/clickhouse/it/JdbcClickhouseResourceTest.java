@@ -15,12 +15,13 @@ public class JdbcClickhouseResourceTest {
     @Test
     public void testAgoralEndpoint() {
         // TODO: uncomment
-
+        System.out.println("Start IT test");
         given()
                 .when().get("/jdbc-clickhouse/agoral")
                 .then()
                 .statusCode(200)
-                .body(is("1/leo/2/yui/"));
+                .body(is("1/leo/"));
+        System.out.println("IT finished");
 
     }
 }

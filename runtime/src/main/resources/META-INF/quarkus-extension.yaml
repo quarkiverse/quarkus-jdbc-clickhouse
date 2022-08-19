@@ -7,5 +7,5 @@ metadata:
     - "clickhouse"
   categories:
     - "data"
-  status: "preview"
-  description: "Connect to the Sqlite database via JDBC/DataSource/Hibernate"
+  status: "experimental"
+  description: "Connect to the ClickHouse database via JDBC/DataSource"

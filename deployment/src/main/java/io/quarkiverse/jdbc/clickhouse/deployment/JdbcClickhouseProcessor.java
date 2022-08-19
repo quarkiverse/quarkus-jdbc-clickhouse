@@ -1,5 +1,6 @@
 package io.quarkiverse.jdbc.clickhouse.deployment;
 
+import com.clickhouse.client.ClickHouseClient;
 import com.clickhouse.jdbc.ClickHouseDataSource;
 import com.clickhouse.jdbc.ClickHouseDriver;
 
@@ -15,6 +16,7 @@ import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.SslNativeConfigBuildItem;
+import io.quarkus.deployment.builditem.nativeimage.ServiceProviderBuildItem;
 
 @SuppressWarnings("unused")
 class JdbcClickhouseProcessor {
@@ -39,6 +41,18 @@ class JdbcClickhouseProcessor {
                         DB_KIND,
                         DRIVER_NAME,
                         DATA_SOURCE_NAME));
+    }
+
+    @BuildStep
+    void registerServices(BuildProducer<ServiceProviderBuildItem> items) {
+        items.produce(new ServiceProviderBuildItem(
+                ClickHouseClient.class.getName(), com.clickhouse.client.http.ClickHouseHttpClient.class.getName()));
+        //items.produce(new ServiceProviderBuildItem(
+        //        ClickHouseClient.class.getName(), com.clickhouse.client.cli.ClickHouseCommandLineClient.class.getName()));
+
+        //items.produce(new ServiceProviderBuildItem(
+        //        ClickHouseClient.class.getName(), com.clickhouse.client.grpc.ClickHouseGrpcClient.class.getName()));
+
     }
 
     @BuildStep

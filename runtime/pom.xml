@@ -20,18 +20,89 @@
       <artifactId>quarkus-agroal</artifactId>
       <optional>true</optional>
     </dependency>
+
     <dependency>
       <groupId>com.clickhouse</groupId>
       <artifactId>clickhouse-jdbc</artifactId>
       <version>${clickhouse.driver.version}</version>
-      <classifier>all</classifier>
       <exclusions>
         <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
+          <groupId>com.clickhouse</groupId>
+          <artifactId>clickhouse-cli-client</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.clickhouse</groupId>
+          <artifactId>clickhouse-grpc-client</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.clickhouse</groupId>
+          <artifactId>clickhouse-http-client</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.clickhouse</groupId>
+          <artifactId>org.roaringbitmap</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>com.clickhouse</groupId>
+      <artifactId>clickhouse-http-client</artifactId>
+      <version>${clickhouse.driver.version}</version>
+    </dependency>
+<!--    <dependency>
+      <groupId>com.clickhouse</groupId>
+      <artifactId>clickhouse-cli-client</artifactId>
+      <version>${clickhouse.driver.version}</version>
+    </dependency>-->
+    <dependency>
+      <groupId>com.clickhouse</groupId>
+      <artifactId>org.roaringbitmap</artifactId>
+      <version>${repackaged.version}</version>
+    </dependency>
+    <!--<dependency>
+      <groupId>com.clickhouse</groupId>
+      <artifactId>clickhouse-grpc-client</artifactId>
+      <version>${clickhouse.driver.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.clickhouse</groupId>
+          <artifactId>io.grpc</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>-->
+<!--    <dependency>
+      <groupId>com.clickhouse</groupId>
+      <artifactId>clickhouse-cli-client</artifactId>
+      <version>${clickhouse.driver.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.clickhouse</groupId>
+      <artifactId>org.roaringbitmap</artifactId>
+      <version>${repackaged.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-all</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>io.grpc</groupId>
+          <artifactId>grpc-netty-shaded</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-protobuf</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-stub</artifactId>
+    </dependency>-->
+    <!-- ReTriger initialization(httpcore) -->
+<!--    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-apache-httpclient</artifactId>
+    </dependency>-->
   </dependencies>
   <build>
     <plugins>
