@@ -24,7 +24,7 @@
     <quarkus.version>2.15.3.Final</quarkus.version>
     <clickhouse.driver.version>0.3.2-patch11</clickhouse.driver.version>
     <testcontainers.clickhouse.version>1.17.6</testcontainers.clickhouse.version>
-    <repackaged.version>1.5.0</repackaged.version>
+    <repackaged.version>1.7.0</repackaged.version>
   </properties>
   <dependencyManagement>
     <dependencies>
