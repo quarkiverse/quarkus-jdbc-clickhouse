@@ -3,7 +3,7 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-[![Build](https://github.com/quarkiverse/quarkus-jdbc-clickhouse/actions/workflows/build.yml/badge.svg)]
+[![Build](https://github.com/quarkiverse/quarkus-jdbc-clickhouse/workflows/Build/badge.svg)](https://github.com/quarkiverse/quarkus-jdbc-clickhouse/actions?query=workflow%3ABuild)
 [![Version](https://img.shields.io/maven-central/v/io.quarkiverse.jdbc/quarkus-jdbc-clickhouse?logo=apache-maven&style=flat-square)](https://search.maven.org/artifact/io.quarkiverse.jdbc/quarkus-jdbc-clickhouse)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
 
