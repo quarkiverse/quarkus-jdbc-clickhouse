@@ -19,11 +19,11 @@ package io.quarkiverse.quarkus.jdbc.clickhouse.it;
 import java.sql.*;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 import com.clickhouse.jdbc.internal.ClickHouseConnectionImpl;
 
