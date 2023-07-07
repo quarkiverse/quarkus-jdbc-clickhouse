@@ -1,5 +1,5 @@
 name: quarkus-jdbc-clickhouse
-title: Quarkus Jdbc Clickhouse
+title: Jdbc Clickhouse
 version: dev
 nav:
   - modules/ROOT/nav.adoc
