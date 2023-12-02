@@ -5,6 +5,7 @@ import static io.quarkus.datasource.deployment.spi.DatabaseDefaultSetupConfig.DE
 import static io.quarkus.datasource.deployment.spi.DatabaseDefaultSetupConfig.DEFAULT_DATABASE_PASSWORD;
 import static io.quarkus.datasource.deployment.spi.DatabaseDefaultSetupConfig.DEFAULT_DATABASE_USERNAME;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -13,12 +14,17 @@ import org.jboss.logging.Logger;
 import org.testcontainers.containers.ClickHouseContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import io.quarkus.datasource.common.runtime.DataSourceUtil;
+import io.quarkus.datasource.deployment.spi.DevServicesDatasourceContainerConfig;
 import io.quarkus.datasource.deployment.spi.DevServicesDatasourceProvider;
 import io.quarkus.datasource.deployment.spi.DevServicesDatasourceProviderBuildItem;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.builditem.DevServicesSharedNetworkBuildItem;
 import io.quarkus.devservices.common.ConfigureUtil;
 import io.quarkus.devservices.common.ContainerShutdownCloseable;
+import io.quarkus.devservices.common.Labels;
+import io.quarkus.devservices.common.Volumes;
+import io.quarkus.runtime.LaunchMode;
 
 public class ClickHouseDevServicesProcessor {
 
@@ -34,36 +40,46 @@ public class ClickHouseDevServicesProcessor {
     @BuildStep
     DevServicesDatasourceProviderBuildItem setupClickHouse(
             List<DevServicesSharedNetworkBuildItem> devServicesSharedNetworkBuildItem) {
-        return new DevServicesDatasourceProviderBuildItem(JdbcClickhouseProcessor.DB_KIND,
-                (username, password, datasourceName, containerConfig, launchMode, startupTimeout) -> {
-                    QuarkusClickHouseSQLContainer container = new QuarkusClickHouseSQLContainer(containerConfig.getImageName(),
-                            containerConfig.getFixedExposedPort(),
-                            !devServicesSharedNetworkBuildItem.isEmpty());
-                    startupTimeout.ifPresent(container::withStartupTimeout);
+        return new DevServicesDatasourceProviderBuildItem(JdbcClickhouseProcessor.DB_KIND, new DevServicesDatasourceProvider() {
+            @Override
+            public RunningDevServicesDatasource startDatabase(Optional<String> username, Optional<String> password,
+                    String datasourceName, DevServicesDatasourceContainerConfig containerConfig,
+                    LaunchMode launchMode, Optional<Duration> startupTimeout) {
+                QuarkusClickHouseSQLContainer container = new QuarkusClickHouseSQLContainer(containerConfig.getImageName(),
+                        containerConfig.getFixedExposedPort(),
+                        !devServicesSharedNetworkBuildItem.isEmpty());
+                startupTimeout.ifPresent(container::withStartupTimeout);
 
-                    String effectiveUsername = containerConfig.getUsername().orElse(username.orElse(DEFAULT_DATABASE_USERNAME));
-                    String effectivePassword = containerConfig.getPassword().orElse(password.orElse(DEFAULT_DATABASE_PASSWORD));
-                    String effectiveDbName = containerConfig.getDbName().orElse(datasourceName.orElse(DEFAULT_DATABASE_NAME));
+                String effectiveUsername = containerConfig.getUsername().orElse(username.orElse(DEFAULT_DATABASE_USERNAME));
+                String effectivePassword = containerConfig.getPassword().orElse(password.orElse(DEFAULT_DATABASE_PASSWORD));
+                String effectiveDbName = containerConfig.getDbName()
+                        .orElse(DataSourceUtil.isDefault(datasourceName) ? DEFAULT_DATABASE_NAME : datasourceName);
 
-                    container.withUsername(effectiveUsername)
-                            .withPassword(effectivePassword)
-                            .withDatabaseName(effectiveDbName)
-                            .withReuse(true);
-                    containerConfig.getAdditionalJdbcUrlProperties().forEach(container::withUrlParam);
-                    containerConfig.getCommand().ifPresent(container::setCommand);
+                container.withUsername(effectiveUsername)
+                        .withPassword(effectivePassword)
+                        .withDatabaseName(effectiveDbName)
+                        .withReuse(true);
 
-                    container.start();
+                Labels.addDataSourceLabel(container, datasourceName);
+                Volumes.addVolumes(container, containerConfig.getVolumes());
 
-                    LOG.info("Dev Services for ClickHouse started.");
-                    System.out.println("!!!Dev Services for ClickHouse started.");
+                container.withEnv(containerConfig.getContainerEnv());
 
-                    return new DevServicesDatasourceProvider.RunningDevServicesDatasource(container.getContainerId(),
-                            container.getEffectiveJdbcUrl(),
-                            container.getReactiveUrl(),
-                            container.getUsername(),
-                            container.getPassword(),
-                            new ContainerShutdownCloseable(container, "ClickHouseSQL"));
-                });
+                containerConfig.getAdditionalJdbcUrlProperties().forEach(container::withUrlParam);
+                containerConfig.getCommand().ifPresent(container::setCommand);
+                containerConfig.getInitScriptPath().ifPresent(container::withInitScript);
+
+                container.start();
+                LOG.info("Dev Services for ClickHouse started.");
+
+                return new DevServicesDatasourceProvider.RunningDevServicesDatasource(container.getContainerId(),
+                        container.getEffectiveJdbcUrl(),
+                        container.getReactiveUrl(),
+                        container.getUsername(),
+                        container.getPassword(),
+                        new ContainerShutdownCloseable(container, "ClickHouseSQL"));
+            }
+        });
     }
 
     private static class QuarkusClickHouseSQLContainer extends ClickHouseContainer {
