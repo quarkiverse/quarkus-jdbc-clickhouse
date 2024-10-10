@@ -27,19 +27,7 @@
       <exclusions>
         <exclusion>
           <groupId>com.clickhouse</groupId>
-          <artifactId>clickhouse-cli-client</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.clickhouse</groupId>
-          <artifactId>clickhouse-grpc-client</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.clickhouse</groupId>
           <artifactId>clickhouse-http-client</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.clickhouse</groupId>
-          <artifactId>org.roaringbitmap</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -57,6 +45,16 @@
       <groupId>com.clickhouse</groupId>
       <artifactId>org.roaringbitmap</artifactId>
       <version>${repackaged.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents.client5</groupId>
+      <artifactId>httpclient5</artifactId>
+      <version>${apache.httpclient.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.lz4</groupId>
+      <artifactId>lz4-java</artifactId>
+      <version>${lz4.version}</version>
     </dependency>
     <!--<dependency>
       <groupId>com.clickhouse</groupId>

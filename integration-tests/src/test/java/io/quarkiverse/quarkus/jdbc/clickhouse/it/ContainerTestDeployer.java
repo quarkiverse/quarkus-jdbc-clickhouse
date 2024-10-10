@@ -5,7 +5,7 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 import java.util.Map;
 import java.util.Optional;
 
-import org.testcontainers.containers.ClickHouseContainer;
+import org.testcontainers.clickhouse.ClickHouseContainer;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 
@@ -13,8 +13,11 @@ import io.quarkus.test.common.DevServicesContext;
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 
 public class ContainerTestDeployer implements QuarkusTestResourceLifecycleManager, DevServicesContext.ContextAware {
+    private static final String DOCKER_IMAGE_NAME = "clickhouse/clickhouse-server";
+    private static final Integer CLICKHOUSE_PORT = 8123;
+
     private Optional<String> containerNetworkId;
-    private JdbcDatabaseContainer container;
+    private JdbcDatabaseContainer<ClickHouseContainer> container;
 
     @Override
     public void setIntegrationTestContext(DevServicesContext context) {
@@ -23,7 +26,7 @@ public class ContainerTestDeployer implements QuarkusTestResourceLifecycleManage
 
     @Override
     public Map<String, String> start() {
-        container = new QuarkusClickHouseContainer(ClickHouseContainer.IMAGE)
+        container = new ClickHouseContainer(DOCKER_IMAGE_NAME)
                 .withLogConsumer(outputFrame -> {
                 });
 
@@ -46,12 +49,12 @@ public class ContainerTestDeployer implements QuarkusTestResourceLifecycleManage
 
     private String fixJdbcUrl(String jdbcUrl) {
         // Part of the JDBC URL to replace
-        String hostPort = container.getHost() + ':' + container.getMappedPort(ClickHouseContainer.HTTP_PORT);
+        String hostPort = container.getHost() + ':' + container.getMappedPort(CLICKHOUSE_PORT);
 
         // Host/IP on the container network plus the unmapped port
         String networkHostPort = container.getCurrentContainerInfo().getConfig().getHostName()
                 + ':'
-                + ClickHouseContainer.HTTP_PORT;
+                + CLICKHOUSE_PORT;
 
         return jdbcUrl.replace(hostPort, networkHostPort);
     }
@@ -59,23 +62,5 @@ public class ContainerTestDeployer implements QuarkusTestResourceLifecycleManage
     @Override
     public void stop() {
         // close container
-    }
-
-    private static class QuarkusClickHouseContainer extends ClickHouseContainer {
-
-        public QuarkusClickHouseContainer(String dockerImageName) {
-            super(dockerImageName);
-        }
-
-        @Override
-        public String getDriverClassName() {
-            String className = "com.clickhouse.jdbc.ClickHouseDriver";
-            try {
-                Class.forName(className);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-            return className;
-        }
     }
 }
