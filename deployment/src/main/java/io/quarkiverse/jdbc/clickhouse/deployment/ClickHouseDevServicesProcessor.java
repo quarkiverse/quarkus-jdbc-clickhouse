@@ -67,7 +67,7 @@ public class ClickHouseDevServicesProcessor {
 
                 containerConfig.getAdditionalJdbcUrlProperties().forEach(container::withUrlParam);
                 containerConfig.getCommand().ifPresent(container::setCommand);
-                containerConfig.getInitScriptPath().ifPresent(container::withInitScript);
+                //containerConfig.getInitScriptPath().ifPresent(container::withInitScript);
 
                 container.start();
                 LOG.info("Dev Services for ClickHouse started.");
