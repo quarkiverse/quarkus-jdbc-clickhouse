@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 import org.jboss.logging.Logger;
-import org.testcontainers.containers.ClickHouseContainer;
+import org.testcontainers.clickhouse.ClickHouseContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import io.quarkus.datasource.common.runtime.DataSourceUtil;
@@ -85,14 +85,16 @@ public class ClickHouseDevServicesProcessor {
     private static class QuarkusClickHouseSQLContainer extends ClickHouseContainer {
         private final OptionalInt fixedExposedPort;
         private final boolean useSharedNetwork;
-
+        private static final Integer HTTP_PORT = 8123;
+        static final String CLICKHOUSE_CLICKHOUSE_SERVER = "clickhouse/clickhouse-server";
+        private static final String DEFAULT_IMAGE = "clickhouse/clickhouse-server:latest";
         private String hostName = null;
 
         public QuarkusClickHouseSQLContainer(Optional<String> imageName, OptionalInt fixedExposedPort,
                 boolean useSharedNetwork) {
             super(DockerImageName
-                    .parse(imageName.orElseGet(() -> ConfigureUtil.getDefaultImageNameFor("clickhouse")))
-                    .asCompatibleSubstituteFor(DockerImageName.parse(ClickHouseContainer.IMAGE)));
+                    .parse(imageName.orElse(DEFAULT_IMAGE))
+                    .asCompatibleSubstituteFor(DockerImageName.parse(CLICKHOUSE_CLICKHOUSE_SERVER)));
             this.fixedExposedPort = fixedExposedPort;
             this.useSharedNetwork = useSharedNetwork;
         }
@@ -107,9 +109,9 @@ public class ClickHouseDevServicesProcessor {
             }
 
             if (fixedExposedPort.isPresent()) {
-                addFixedExposedPort(fixedExposedPort.getAsInt(), ClickHouseContainer.HTTP_PORT);
+                addFixedExposedPort(fixedExposedPort.getAsInt(), HTTP_PORT);
             } else {
-                addExposedPort(ClickHouseContainer.HTTP_PORT);
+                addExposedPort(HTTP_PORT);
             }
         }
 
@@ -128,7 +130,7 @@ public class ClickHouseDevServicesProcessor {
                 // and the container port since the application communicating with this container
                 // won't be doing port mapping
                 String additionalUrlParams = constructUrlParameters("?", "&");
-                return "jdbc:ch://" + hostName + ":" + ClickHouseContainer.HTTP_PORT
+                return "jdbc:ch://" + hostName + ":" + HTTP_PORT
                         + "/" + getDatabaseName() + additionalUrlParams;
             } else {
                 return super.getJdbcUrl();

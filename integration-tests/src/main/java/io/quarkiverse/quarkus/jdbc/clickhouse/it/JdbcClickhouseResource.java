@@ -25,7 +25,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
-import com.clickhouse.jdbc.internal.ClickHouseConnectionImpl;
+import com.clickhouse.jdbc.ConnectionImpl;
 
 import io.agroal.api.AgroalDataSource;
 import io.agroal.pool.wrapper.ConnectionWrapper;
@@ -66,7 +66,7 @@ public class JdbcClickhouseResource {
     }
 
     private void unwrap(ConnectionWrapper connection) throws SQLException {
-        ClickHouseConnectionImpl unwrap = connection.unwrap(ClickHouseConnectionImpl.class);
+        ConnectionImpl unwrap = connection.unwrap(ConnectionImpl.class);
         String collect = unwrap.getClientInfo().entrySet().stream()
                 .map(e -> e.getKey() + ":" + e.getValue())
                 .collect(Collectors.joining(", "));

@@ -1,8 +1,7 @@
 package io.quarkiverse.jdbc.clickhouse.deployment;
 
-import com.clickhouse.client.ClickHouseClient;
-import com.clickhouse.jdbc.ClickHouseDataSource;
-import com.clickhouse.jdbc.ClickHouseDriver;
+import com.clickhouse.jdbc.DataSourceImpl;
+import com.clickhouse.jdbc.Driver;
 
 import io.quarkiverse.jdbc.clickhouse.runtime.ClickHouseAgroalConnectionConfigurer;
 import io.quarkus.agroal.spi.JdbcDriverBuildItem;
@@ -16,7 +15,6 @@ import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.SslNativeConfigBuildItem;
-import io.quarkus.deployment.builditem.nativeimage.ServiceProviderBuildItem;
 
 @SuppressWarnings("unused")
 class JdbcClickhouseProcessor {
@@ -24,8 +22,8 @@ class JdbcClickhouseProcessor {
     private static final String FEATURE = "jdbc-clickhouse";
 
     static final String DB_KIND = "clickhouse";
-    static final String DRIVER_NAME = ClickHouseDriver.class.getName();
-    static final String DATA_SOURCE_NAME = ClickHouseDataSource.class.getName();
+    static final String DRIVER_NAME = Driver.class.getName();
+    static final String DATA_SOURCE_NAME = DataSourceImpl.class.getName();
 
     @BuildStep
     FeatureBuildItem feature() {
@@ -41,18 +39,6 @@ class JdbcClickhouseProcessor {
                         DB_KIND,
                         DRIVER_NAME,
                         DATA_SOURCE_NAME));
-    }
-
-    @BuildStep
-    void registerServices(BuildProducer<ServiceProviderBuildItem> items) {
-        items.produce(new ServiceProviderBuildItem(
-                ClickHouseClient.class.getName(), com.clickhouse.client.http.ClickHouseHttpClient.class.getName()));
-        //items.produce(new ServiceProviderBuildItem(
-        //        ClickHouseClient.class.getName(), com.clickhouse.client.cli.ClickHouseCommandLineClient.class.getName()));
-
-        //items.produce(new ServiceProviderBuildItem(
-        //        ClickHouseClient.class.getName(), com.clickhouse.client.grpc.ClickHouseGrpcClient.class.getName()));
-
     }
 
     @BuildStep
