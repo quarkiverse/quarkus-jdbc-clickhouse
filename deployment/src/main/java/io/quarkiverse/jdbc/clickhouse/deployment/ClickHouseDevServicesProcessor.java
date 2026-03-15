@@ -15,13 +15,14 @@ import org.testcontainers.clickhouse.ClickHouseContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import io.quarkus.datasource.common.runtime.DataSourceUtil;
+import io.quarkus.datasource.deployment.spi.DatasourceStartable;
 import io.quarkus.datasource.deployment.spi.DevServicesDatasourceContainerConfig;
 import io.quarkus.datasource.deployment.spi.DevServicesDatasourceProvider;
 import io.quarkus.datasource.deployment.spi.DevServicesDatasourceProviderBuildItem;
 import io.quarkus.deployment.annotations.BuildStep;
+import io.quarkus.deployment.builditem.DevServicesComposeProjectBuildItem;
 import io.quarkus.deployment.builditem.DevServicesSharedNetworkBuildItem;
 import io.quarkus.devservices.common.ConfigureUtil;
-import io.quarkus.devservices.common.ContainerShutdownCloseable;
 import io.quarkus.devservices.common.Labels;
 import io.quarkus.devservices.common.Volumes;
 import io.quarkus.runtime.LaunchMode;
@@ -39,12 +40,19 @@ public class ClickHouseDevServicesProcessor {
 
     @BuildStep
     DevServicesDatasourceProviderBuildItem setupClickHouse(
-            List<DevServicesSharedNetworkBuildItem> devServicesSharedNetworkBuildItem) {
+            List<DevServicesSharedNetworkBuildItem> devServicesSharedNetworkBuildItem,
+            DevServicesComposeProjectBuildItem composeProjectBuildItem) {
+
         return new DevServicesDatasourceProviderBuildItem(JdbcClickhouseProcessor.DB_KIND, new DevServicesDatasourceProvider() {
             @Override
-            public RunningDevServicesDatasource startDatabase(Optional<String> username, Optional<String> password,
+            public String getFeature() {
+                return "jdbc-clickhouse";
+            }
+
+            @Override
+            public DatasourceStartable createDatasourceStartable(Optional<String> username, Optional<String> password,
                     String datasourceName, DevServicesDatasourceContainerConfig containerConfig,
-                    LaunchMode launchMode, Optional<Duration> startupTimeout) {
+                    LaunchMode launchMode, boolean useSharedNetwork, Optional<Duration> startupTimeout) {
                 QuarkusClickHouseSQLContainer container = new QuarkusClickHouseSQLContainer(containerConfig.getImageName(),
                         containerConfig.getFixedExposedPort(),
                         !devServicesSharedNetworkBuildItem.isEmpty());
@@ -69,20 +77,20 @@ public class ClickHouseDevServicesProcessor {
                 containerConfig.getCommand().ifPresent(container::setCommand);
                 //containerConfig.getInitScriptPath().ifPresent(container::withInitScript);
 
-                container.start();
-                LOG.info("Dev Services for ClickHouse started.");
+                return container;
+            }
 
-                return new DevServicesDatasourceProvider.RunningDevServicesDatasource(container.getContainerId(),
-                        container.getEffectiveJdbcUrl(),
-                        container.getReactiveUrl(),
-                        container.getUsername(),
-                        container.getPassword(),
-                        new ContainerShutdownCloseable(container, "ClickHouseSQL"));
+            @Override
+            public Optional<DevServicesDatasourceProvider.RunningDevServicesDatasource> findRunningComposeDatasource(
+                    LaunchMode launchMode, boolean useSharedNetwork, DevServicesDatasourceContainerConfig containerConfig,
+                    DevServicesComposeProjectBuildItem composeProjectBuildItem) {
+                // No compose support
+                return Optional.empty();
             }
         });
     }
 
-    private static class QuarkusClickHouseSQLContainer extends ClickHouseContainer {
+    private static class QuarkusClickHouseSQLContainer extends ClickHouseContainer implements DatasourceStartable {
         private final OptionalInt fixedExposedPort;
         private final boolean useSharedNetwork;
         private static final Integer HTTP_PORT = 8123;
@@ -139,6 +147,16 @@ public class ClickHouseDevServicesProcessor {
 
         public String getReactiveUrl() {
             return getEffectiveJdbcUrl().replaceFirst("jdbc:", "vertx-reactive:");
+        }
+
+        @Override
+        public void close() {
+            super.close();
+        }
+
+        @Override
+        public String getConnectionInfo() {
+            return getEffectiveJdbcUrl();
         }
     }
 }

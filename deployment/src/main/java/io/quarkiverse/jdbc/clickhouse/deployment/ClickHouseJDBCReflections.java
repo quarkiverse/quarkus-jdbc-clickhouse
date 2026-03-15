@@ -21,7 +21,6 @@ public class ClickHouseJDBCReflections {
         //Not strictly necessary when using Agroal, as it also registers
         //any JDBC driver being configured explicitly through its configuration.
         //We register it for the sake of people not using Agroal.
-        reflectiveClass.produce(ReflectiveClassBuildItem.builder(DRIVER_NAME).build());
-        reflectiveClass.produce(ReflectiveClassBuildItem.builder(DATA_SOURCE_NAME).build());
+        reflectiveClass.produce(ReflectiveClassBuildItem.builder(DATA_SOURCE_NAME, DRIVER_NAME).constructors().build());
     }
 }
