@@ -1,23 +1,29 @@
 package io.quarkiverse.jdbc.clickhouse.test;
 
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import io.quarkus.test.QuarkusDevModeTest;
+import java.util.Map;
+
+import org.eclipse.microprofile.config.spi.ConfigSource;
+import org.junit.jupiter.api.Test;
+
+import io.quarkiverse.jdbc.clickhouse.runtime.ClickHouseConfigSourceFactory;
 
 public class JdbcClickhouseDevModeTest {
-
-    // Start hot reload (DevMode) test with your extension loaded
-    @RegisterExtension
-    static final QuarkusDevModeTest devModeTest = new QuarkusDevModeTest()
-            .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
-
     @Test
-    public void writeYourOwnDevModeTest() {
-        // Write your dev mode tests here - see the testing extension guide https://quarkus.io/guides/writing-extensions#testing-hot-reload for more information
-        Assertions.assertTrue(true, "Add dev mode assertions to " + getClass().getName());
+    void aliasesNamedDatasourceProperties() {
+        ConfigSource configSource = new ClickHouseConfigSourceFactory()
+                .getConfigSources(new JdbcClickhouseTest.MapBackedContext(Map.of(
+                        "quarkus.datasource.\"analytics\".clickhouse.socket-keepalive", "true",
+                        "quarkus.datasource.\"analytics\".clickhouse.session-id", "analytics-session")))
+                .iterator()
+                .next();
+
+        assertEquals("true",
+                configSource.getValue(
+                        "quarkus.datasource.\"analytics\".jdbc.additional-jdbc-properties.socket_keepalive"));
+        assertEquals("analytics-session",
+                configSource.getValue(
+                        "quarkus.datasource.\"analytics\".jdbc.additional-jdbc-properties.session_id"));
     }
 }

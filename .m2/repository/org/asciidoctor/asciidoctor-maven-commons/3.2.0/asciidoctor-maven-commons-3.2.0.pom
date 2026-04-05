@@ -1,0 +1,57 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.asciidoctor</groupId>
+        <artifactId>asciidoctor-maven-tools</artifactId>
+        <version>3.2.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <groupId>org.asciidoctor</groupId>
+    <artifactId>asciidoctor-maven-commons</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Asciidoctor Maven Commons</name>
+    <description>
+        Common components for Asciidoctor Maven Plugin and Asciidoctor Doxia Module(s).
+        These should not depend on Doxia libraries, only shared Maven dependencies used by
+        all and provided as runtime.
+        This is an internal library, backward compatibility is not guaranteed.
+    </description>
+    <url>https://github.com/asciidoctor/asciidoctor-maven-plugin</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctorj</artifactId>
+            <version>${asciidoctorj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-core</artifactId>
+            <version>${maven.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Required: see https://issues.apache.org/jira/browse/MNG-6965 -->
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>${plexus-utils.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.doxia</groupId>
+            <artifactId>doxia-core</artifactId>
+            <version>${doxia.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.doxia</groupId>
+            <artifactId>doxia-sink-api</artifactId>
+            <version>${doxia.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+</project>

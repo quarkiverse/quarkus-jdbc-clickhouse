@@ -2,7 +2,7 @@
 
 include::./includes/attributes.adoc[]
 
-TIP: Describe what the extension does here.
+Quarkus JDBC ClickHouse provides the ClickHouse JDBC driver together with Quarkus datasource integration.
 
 == Installation
 
@@ -22,6 +22,31 @@ For instance, with Maven, add the following dependency to your POM file:
 [[extension-configuration-reference]]
 == Extension Configuration Reference
 
-TIP: Remove this section if you don't have Quarkus configuration properties in your extension.
+The extension supports ClickHouse-specific datasource aliases under `quarkus.datasource.clickhouse.*`
+and `quarkus.datasource."name".clickhouse.*` for named datasources.
+
+Example:
+
+[source,properties]
+----
+quarkus.datasource.db-kind=clickhouse
+quarkus.datasource.jdbc.url=jdbc:clickhouse:http://localhost:8123/default
+quarkus.datasource.clickhouse.client-name=my-service
+quarkus.datasource.clickhouse.compress=true
+quarkus.datasource.clickhouse.socket-keepalive=true
+quarkus.datasource.clickhouse.properties.beta.row_binary_for_simple_insert=true
+----
+
+Named datasource example:
+
+[source,properties]
+----
+quarkus.datasource."analytics".db-kind=clickhouse
+quarkus.datasource."analytics".jdbc.url=jdbc:clickhouse:http://localhost:8123/default
+quarkus.datasource."analytics".clickhouse.session-id=analytics-session
+----
+
+The aliases are translated to standard JDBC additional properties, so raw driver options
+can still be passed through `...clickhouse.properties.*`.
 
 include::includes/quarkus-jdbc-clickhouse.adoc[leveloffset=+1, opts=optional]

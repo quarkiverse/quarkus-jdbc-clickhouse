@@ -14,14 +14,28 @@ public class JdbcClickhouseResourceTest {
 
     @Test
     public void testAgoralEndpoint() {
-        // TODO: uncomment
-        System.out.println("Start IT test");
         given()
                 .when().get("/jdbc-clickhouse/agoral")
                 .then()
                 .statusCode(200)
                 .body(is("1/leo/"));
-        System.out.println("IT finished");
+    }
 
+    @Test
+    public void testClickHouseConfigAliases() {
+        given()
+                .when().get("/jdbc-clickhouse/config")
+                .then()
+                .statusCode(200)
+                .body(is("client_name=quarkus-it-client;socket_keepalive=true"));
+    }
+
+    @Test
+    public void testNamedDataSourceClickHouseConfigAliases() {
+        given()
+                .when().get("/jdbc-clickhouse/config/analytics")
+                .then()
+                .statusCode(200)
+                .body(is("client_name=quarkus-analytics-client;socket_keepalive=false"));
     }
 }

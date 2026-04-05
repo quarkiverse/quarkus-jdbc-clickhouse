@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        https://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>net.revelc.code</groupId>
+    <artifactId>revelc</artifactId>
+    <version>6</version>
+    <relativePath />
+  </parent>
+  <artifactId>impsort-maven-plugin</artifactId>
+  <version>1.12.0</version>
+  <packaging>maven-plugin</packaging>
+  <name>ImpSort Maven Plugin</name>
+  <description>Sort your imps! A Maven plugin to sort the import statements in your Java source files.</description>
+  <url>http://code.revelc.net/impsort-maven-plugin</url>
+  <inceptionYear>2017</inceptionYear>
+  <developers>
+    <developer>
+      <name>Christopher Tubbs</name>
+    </developer>
+  </developers>
+  <prerequisites>
+    <maven>3.6.3</maven>
+  </prerequisites>
+  <scm>
+    <connection>scm:git:https://github.com/revelc/${github.site.repositoryName}.git</connection>
+    <developerConnection>scm:git:git@github.com:revelc/${github.site.repositoryName}.git</developerConnection>
+    <tag>impsort-maven-plugin-1.12.0</tag>
+    <url>https://github.com/revelc/${github.site.repositoryName}</url>
+  </scm>
+  <properties>
+    <formatter.configFile>src/tools/modified-google-style.xml</formatter.configFile>
+    <maven.compiler.release>17</maven.compiler.release>
+    <project.build.outputTimestamp>2024-09-05T00:10:41Z</project.build.outputTimestamp>
+    <version.javaparser>3.26.2</version.javaparser>
+  </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.github.javaparser</groupId>
+        <artifactId>javaparser-core</artifactId>
+        <version>${version.javaparser}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>33.3.0-jre</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-utils</artifactId>
+        <version>4.0.1</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>com.github.javaparser</groupId>
+      <artifactId>javaparser-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+    </dependency>
+  </dependencies>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <configuration>
+            <licenseSets>
+              <licenseSet>
+                <excludes>
+                  <!-- char encoding prevents this file from being read by the plugin -->
+                  <exclude>src/test/resources/Iso8859File.java</exclude>
+                </excludes>
+              </licenseSet>
+            </licenseSets>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <dependencies>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>10.18.1</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>dependency-convergence</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <phase>validate</phase>
+            <configuration>
+              <rules>
+                <dependencyConvergence />
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>check-google-style</id>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <configLocation>google_checks.xml</configLocation>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>run-spotbugs</id>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

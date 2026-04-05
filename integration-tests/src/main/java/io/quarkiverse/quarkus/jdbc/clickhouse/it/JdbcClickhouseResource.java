@@ -17,6 +17,7 @@
 package io.quarkiverse.quarkus.jdbc.clickhouse.it;
 
 import java.sql.*;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -26,9 +27,11 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
 import com.clickhouse.jdbc.ConnectionImpl;
+import com.clickhouse.jdbc.internal.JdbcConfiguration;
 
 import io.agroal.api.AgroalDataSource;
 import io.agroal.pool.wrapper.ConnectionWrapper;
+import io.quarkus.agroal.DataSource;
 import io.quarkus.runtime.StartupEvent;
 
 @Path("/jdbc-clickhouse")
@@ -36,6 +39,10 @@ import io.quarkus.runtime.StartupEvent;
 public class JdbcClickhouseResource {
     @Inject
     AgroalDataSource ds;
+
+    @Inject
+    @DataSource("analytics")
+    AgroalDataSource analyticsDs;
 
     void onStart(@Observes StartupEvent event) throws Exception {
         //com.clickhouse.client.ClickHouseClientBuilder
@@ -63,6 +70,41 @@ public class JdbcClickhouseResource {
             result = test(connection);
         }
         return result;
+    }
+
+    @GET
+    @Path("config")
+    public String config() throws SQLException {
+        return config(ds);
+    }
+
+    @GET
+    @Path("config/analytics")
+    public String analyticsConfig() throws SQLException {
+        return config(analyticsDs);
+    }
+
+    private String config(AgroalDataSource dataSource) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            ConnectionImpl unwrap = connection.unwrap(ConnectionImpl.class);
+            JdbcConfiguration jdbcConfig = unwrap.getJdbcConfig();
+            Properties clientInfo = unwrap.getClientInfo();
+            String clientName = jdbcConfig.getClientProperties().get("client_name");
+            String socketKeepalive = jdbcConfig.getClientProperties().get("socket_keepalive");
+
+            if (clientName == null) {
+                clientName = clientInfo.getProperty("client_name");
+            }
+            if (clientName == null) {
+                clientName = clientInfo.getProperty("ApplicationName");
+            }
+            if (socketKeepalive == null) {
+                socketKeepalive = clientInfo.getProperty("socket_keepalive");
+            }
+
+            return "client_name=" + clientName
+                    + ";socket_keepalive=" + socketKeepalive;
+        }
     }
 
     private void unwrap(ConnectionWrapper connection) throws SQLException {

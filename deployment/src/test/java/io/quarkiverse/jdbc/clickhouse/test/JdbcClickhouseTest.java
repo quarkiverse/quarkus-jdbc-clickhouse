@@ -1,26 +1,63 @@
 package io.quarkiverse.jdbc.clickhouse.test;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.jupiter.api.Assertions;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.microprofile.config.spi.ConfigSource;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
-import io.quarkus.test.QuarkusUnitTest;
+import io.quarkiverse.jdbc.clickhouse.runtime.ClickHouseConfigSourceFactory;
+import io.smallrye.config.ConfigSourceContext;
+import io.smallrye.config.ConfigValue;
 
-@ApplicationScoped
 public class JdbcClickhouseTest {
-
-    // Start unit test with your extension loaded
-    @RegisterExtension
-    static final QuarkusUnitTest unitTest = new QuarkusUnitTest()
-            .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
-
     @Test
-    public void writeYourOwnUnitTest() {
-        // Write your unit tests here - see the testing extension guide https://quarkus.io/guides/writing-extensions#testing-extensions for more information
-        Assertions.assertTrue(true, "Add some assertions to " + getClass().getName());
+    void aliasesDefaultDatasourceProperties() {
+        ConfigSource configSource = new ClickHouseConfigSourceFactory()
+                .getConfigSources(new MapBackedContext(Map.of(
+                        "quarkus.datasource.clickhouse.client-name", "quarkus-test-client",
+                        "quarkus.datasource.clickhouse.properties.custom_flag", "enabled")))
+                .iterator()
+                .next();
+
+        assertEquals("quarkus-test-client",
+                configSource.getValue("quarkus.datasource.jdbc.additional-jdbc-properties.client_name"));
+        assertEquals("enabled",
+                configSource.getValue("quarkus.datasource.jdbc.additional-jdbc-properties.custom_flag"));
+    }
+
+    static final class MapBackedContext implements ConfigSourceContext {
+        private final Map<String, String> properties;
+
+        MapBackedContext(Map<String, String> properties) {
+            this.properties = properties;
+        }
+
+        @Override
+        public ConfigValue getValue(String name) {
+            String value = properties.get(name);
+            if (value == null) {
+                return null;
+            }
+            return ConfigValue.builder()
+                    .withName(name)
+                    .withValue(value)
+                    .withConfigSourceName("test")
+                    .withConfigSourceOrdinal(1000)
+                    .build();
+        }
+
+        @Override
+        public Iterator<String> iterateNames() {
+            return properties.keySet().iterator();
+        }
+
+        @Override
+        public List<String> getProfiles() {
+            return List.of();
+        }
     }
 }

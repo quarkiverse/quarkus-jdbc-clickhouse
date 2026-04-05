@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.regnis.q.sequence</groupId>
+  <artifactId>sequence-library</artifactId>
+  <version>1.0.4</version>
+  <name>Sequence Library</name>
+  <description>Textual Diff and Merge Library</description>
+  <url>https://svn.tmatesoft.com/repos/3rdparty/de.regnigs.q.sequence</url>
+  <organization>
+    <name>TMate Software</name>
+    <url>https://tmatesoft.com/</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>Sequence Library License (BSD-like)</name>
+      <url>https://svn.tmatesoft.com/repos/3rdparty/de.regnis.q.sequnce/trunk/LICENSE.txt</url>
+      <distribution>repos</distribution>
+      <comments>Sequence Library License (BSD-like)</comments>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>alexander.kitaev</id>
+      <name>Alexander Kitaev</name>
+      <email>support@tmatesoft.com</email>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:svn:https://svn.tmatesoft.com/repos/3rdparty/de.regnis.q.sequence</connection>
+    <developerConnection>scm:svn:https://svn.tmatesoft.com/repos/3rdparty/de.regnis.q.sequence</developerConnection>
+    <url>https://svn.tmatesoft.com/repos/3rdparty/de.regnigs.q.sequence</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

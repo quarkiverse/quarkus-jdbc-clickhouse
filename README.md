@@ -9,6 +9,33 @@
 
 Quarkus JDBC ClickHouse is a Quarkus extension for the ClickHouse database.
 
+## Configuration
+
+Besides the standard `quarkus.datasource.jdbc.*` settings, the extension also supports
+ClickHouse-specific aliases under `quarkus.datasource.clickhouse.*`.
+
+Example:
+
+```properties
+quarkus.datasource.db-kind=clickhouse
+quarkus.datasource.jdbc.url=jdbc:clickhouse:http://localhost:8123/default
+quarkus.datasource.clickhouse.client-name=my-service
+quarkus.datasource.clickhouse.compress=true
+quarkus.datasource.clickhouse.socket-keepalive=true
+quarkus.datasource.clickhouse.properties.beta.row_binary_for_simple_insert=true
+```
+
+Named datasources are supported as well:
+
+```properties
+quarkus.datasource."analytics".db-kind=clickhouse
+quarkus.datasource."analytics".jdbc.url=jdbc:clickhouse:http://localhost:8123/default
+quarkus.datasource."analytics".clickhouse.session-id=analytics-session
+```
+
+The aliases are translated to `quarkus.datasource[."name"].jdbc.additional-jdbc-properties.*`,
+so raw driver properties remain available through `...clickhouse.properties.*`.
+
 ## User Documentation
 
 https://quarkiverse.github.io/quarkiverse-docs/quarkus-jdbc-clickhouse/dev/index.html

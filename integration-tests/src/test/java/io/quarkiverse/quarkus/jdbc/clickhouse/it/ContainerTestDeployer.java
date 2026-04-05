@@ -41,7 +41,10 @@ public class ContainerTestDeployer implements QuarkusTestResourceLifecycleManage
         return ImmutableMap.of(
                 "quarkus.datasource.username", container.getUsername(),
                 "quarkus.datasource.password", container.getPassword(),
-                "quarkus.datasource.jdbc.url", jdbcUrl);
+                "quarkus.datasource.jdbc.url", jdbcUrl,
+                "quarkus.datasource.\"analytics\".username", container.getUsername(),
+                "quarkus.datasource.\"analytics\".password", container.getPassword(),
+                "quarkus.datasource.\"analytics\".jdbc.url", jdbcUrl);
     }
 
     //    private String fixJdbcUrl(String jdbcUrl) {
