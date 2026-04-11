@@ -30,11 +30,40 @@ Named datasources are supported as well:
 ```properties
 quarkus.datasource."analytics".db-kind=clickhouse
 quarkus.datasource."analytics".jdbc.url=jdbc:clickhouse:http://localhost:8123/default
-quarkus.datasource."analytics".clickhouse.session-id=analytics-session
+quarkus.datasource."analytics".clickhouse.client-name=analytics-client
+quarkus.datasource."analytics".clickhouse.socket-keepalive=false
 ```
 
 The aliases are translated to `quarkus.datasource[."name"].jdbc.additional-jdbc-properties.*`,
 so raw driver properties remain available through `...clickhouse.properties.*`.
+
+Currently supported aliases include:
+
+- `client-name`
+- `compress`
+- `decompress`
+- `connection-timeout`
+- `socket-timeout`
+- `socket-keepalive`
+- `ssl`
+- `ssl-mode`
+- `use-server-time-zone`
+- `use-time-zone`
+- `session-id`
+- `session-check`
+- `beta-row-binary-for-simple-insert`
+- `properties.*`
+
+Each property is documented in the Quarkiverse documentation with its purpose and effect on the
+underlying ClickHouse JDBC driver configuration.
+
+## Testing
+
+The project follows the usual Quarkus extension split between `runtime`, `deployment`, and
+`integration-tests`.
+
+- `mvn verify -Pit` runs the JVM integration tests
+- `mvn verify -Pit -Dnative` builds the native runner and executes native integration tests
 
 ## User Documentation
 

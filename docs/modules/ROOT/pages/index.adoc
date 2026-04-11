@@ -6,7 +6,7 @@ Quarkus JDBC ClickHouse provides the ClickHouse JDBC driver together with Quarku
 
 == Installation
 
-If you want to use this extension, you need to add the `io.quarkiverse.quarkus-jdbc-clickhouse:quarkus-jdbc-clickhouse` extension first to your build file.
+If you want to use this extension, add `io.quarkiverse.jdbc:quarkus-jdbc-clickhouse` to your build.
 
 For instance, with Maven, add the following dependency to your POM file:
 
@@ -43,10 +43,18 @@ Named datasource example:
 ----
 quarkus.datasource."analytics".db-kind=clickhouse
 quarkus.datasource."analytics".jdbc.url=jdbc:clickhouse:http://localhost:8123/default
-quarkus.datasource."analytics".clickhouse.session-id=analytics-session
+quarkus.datasource."analytics".clickhouse.client-name=analytics-client
+quarkus.datasource."analytics".clickhouse.socket-keepalive=false
 ----
 
 The aliases are translated to standard JDBC additional properties, so raw driver options
 can still be passed through `...clickhouse.properties.*`.
 
 include::includes/quarkus-jdbc-clickhouse.adoc[leveloffset=+1, opts=optional]
+
+== Testing
+
+The extension uses the standard Quarkus extension layout with a separate `integration-tests` module.
+
+- `mvn verify -Pit` runs the JVM integration tests
+- `mvn verify -Pit -Dnative` builds the native runner and runs native integration tests

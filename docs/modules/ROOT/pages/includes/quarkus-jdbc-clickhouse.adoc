@@ -1,0 +1,85 @@
+The extension exposes ClickHouse JDBC options as Quarkus datasource properties.
+
+For the default datasource, use:
+
+- `quarkus.datasource.clickhouse.*`
+
+For a named datasource, use:
+
+- `quarkus.datasource."name".clickhouse.*`
+
+Internally, these aliases are translated to standard Quarkus JDBC additional properties under
+`quarkus.datasource[."name"].jdbc.additional-jdbc-properties.*`.
+
+`quarkus.datasource.clickhouse.client-name`::
+Sets the ClickHouse client name sent by the JDBC driver.
+Use it to identify your application in ClickHouse logs, monitoring, or server-side diagnostics.
+This maps to the driver property `client_name`.
+
+`quarkus.datasource.clickhouse.compress`::
+Enables request compression for data sent from the client to ClickHouse.
+This can reduce network traffic for large inserts or requests at the cost of some CPU usage.
+This maps to the driver property `compress`.
+
+`quarkus.datasource.clickhouse.decompress`::
+Enables response decompression for compressed payloads returned by ClickHouse.
+Use it when the server returns compressed responses and you want the driver to decode them transparently.
+This maps to the driver property `decompress`.
+
+`quarkus.datasource.clickhouse.connection-timeout`::
+Configures how long the driver waits when establishing the underlying connection.
+Increase it for slow networks or remote ClickHouse deployments.
+This maps to the driver property `connection_timeout`.
+
+`quarkus.datasource.clickhouse.socket-timeout`::
+Configures the socket read timeout for ClickHouse network operations.
+Use it to fail slow queries or network stalls more quickly.
+This maps to the driver property `socket_timeout`.
+
+`quarkus.datasource.clickhouse.socket-keepalive`::
+Enables TCP keepalive for sockets created by the ClickHouse driver.
+This helps long-lived connections survive intermediate network devices that silently drop idle connections.
+This maps to the driver property `socket_keepalive`.
+
+`quarkus.datasource.clickhouse.ssl`::
+Enables SSL/TLS for the ClickHouse connection.
+Use it when connecting to secured ClickHouse endpoints.
+This maps to the driver property `ssl`.
+
+`quarkus.datasource.clickhouse.ssl-mode`::
+Selects the SSL mode used by the ClickHouse driver.
+Use it to control how strictly certificates and TLS setup are handled by the client.
+This maps to the driver property `ssl_mode`.
+
+`quarkus.datasource.clickhouse.use-server-time-zone`::
+Tells the driver to use the server time zone when converting temporal values.
+This is useful when you want result-set timestamps to follow the ClickHouse server configuration.
+This maps to the driver property `use_server_time_zone`.
+
+`quarkus.datasource.clickhouse.use-time-zone`::
+Sets an explicit time zone for the ClickHouse driver.
+Use it when you want timestamp conversion to follow a specific zone instead of the JVM or server default.
+This maps to the driver property `use_time_zone`.
+
+`quarkus.datasource.clickhouse.session-id`::
+Sets a ClickHouse session identifier.
+Use it when you need session-scoped server state or want multiple operations to share the same ClickHouse session.
+This maps to the driver property `session_id`.
+
+`quarkus.datasource.clickhouse.session-check`::
+Enables validation of the ClickHouse session before use.
+Use it when your application relies on session continuity and you want the driver to verify it.
+This maps to the driver property `session_check`.
+
+`quarkus.datasource.clickhouse.beta-row-binary-for-simple-insert`::
+Enables the ClickHouse beta optimization for simple inserts using RowBinary.
+Use it to improve insert performance in supported scenarios, with the understanding that it is still marked beta upstream.
+This maps to the driver property `beta.row_binary_for_simple_insert`.
+
+`quarkus.datasource.clickhouse.properties.*`::
+Passes arbitrary ClickHouse JDBC properties through without a dedicated alias.
+Use it for advanced driver settings that are not yet exposed as first-class Quarkus properties by this extension.
+
+The same property names are available for named datasources, for example
+`quarkus.datasource."analytics".clickhouse.client-name` or
+`quarkus.datasource."analytics".clickhouse.properties.custom_http_headers`.

@@ -57,6 +57,8 @@ nb-configuration.xml
 build/
 
 # Maven
+.m2
+.m2/
 target/
 pom.xml.tag
 pom.xml.releaseBackup
