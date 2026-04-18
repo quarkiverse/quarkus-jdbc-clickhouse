@@ -8,7 +8,7 @@
   </parent>
   <groupId>io.quarkiverse.jdbc</groupId>
   <artifactId>quarkus-jdbc-clickhouse-parent</artifactId>
-  <version>3.0.3</version>
+  <version>999-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Quarkus Jdbc Clickhouse - Parent</name>
   <modules>
@@ -19,7 +19,7 @@
     <connection>scm:git:git@github.com:quarkiverse/quarkus-jdbc-clickhouse.git</connection>
     <developerConnection>scm:git:git@github.com:quarkiverse/quarkus-jdbc-clickhouse.git</developerConnection>
     <url>https://github.com/quarkiverse/quarkus-jdbc-clickhouse</url>
-    <tag>3.0.3</tag>
+    <tag>HEAD</tag>
   </scm>
   <properties>
     <compiler-plugin.version>3.14.1</compiler-plugin.version>
