@@ -28,7 +28,7 @@
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus.version>3.34.2</quarkus.version>
+    <quarkus.version>3.35.2</quarkus.version>
     <clickhouse.driver.version>0.9.8</clickhouse.driver.version>
     <testcontainers.clickhouse.version>1.21.4</testcontainers.clickhouse.version>
   </properties>
