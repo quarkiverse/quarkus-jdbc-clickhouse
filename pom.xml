@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.quarkiverse</groupId>
     <artifactId>quarkiverse-parent</artifactId>
-    <version>21</version>
+    <version>26</version>
   </parent>
   <groupId>io.quarkiverse.jdbc</groupId>
   <artifactId>quarkus-jdbc-clickhouse-parent</artifactId>
@@ -23,13 +23,13 @@
   </scm>
   <properties>
     <compiler-plugin.version>3.14.1</compiler-plugin.version>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
-    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus.version>3.35.3</quarkus.version>
-    <clickhouse.driver.version>0.9.8</clickhouse.driver.version>
+    <quarkus.version>4.0.0</quarkus.version>
+    <clickhouse.driver.version>0.11.2</clickhouse.driver.version>
     <testcontainers.clickhouse.version>1.21.4</testcontainers.clickhouse.version>
   </properties>
   <dependencyManagement>
